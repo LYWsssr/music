@@ -253,7 +253,7 @@ export default {
         }
       });
       // if (this.isplay) return;
-      this.isplay = true;
+      this.isplay = false;
       this.$store.commit(SET_PLAY, this.isplay);
     },
     playMusic() {
