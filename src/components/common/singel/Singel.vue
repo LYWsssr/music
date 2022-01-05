@@ -62,7 +62,7 @@
       <div class="singel-btm">
         <div class="singer-left">
           <TitleHeader name="听友评论" :show="false" style="marginBottom:20px"></TitleHeader>
-          <MvComment :comments="lyricComment"></MvComment>
+          <MvComment :comments="lyricComment" :id='getNowMusicMenu.id'></MvComment>
           <el-pagination
             background
             :page-size="limits"

@@ -136,6 +136,7 @@ export default {
   },
   created() {
     if (this.getMusicListIds.length > 0) {
+			debugger
       this.tableList = [];
       this.getMusicListIds.map((item) => {
         this.getSongListInfoSongs(item);

@@ -99,4 +99,9 @@ export function getSongLyricComment(id,limit=20,offset=0){
         }
     })
 }
+export function getcomment(params){
+    return request({
+        url:"/comment",params
+    })
+}
 

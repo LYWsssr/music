@@ -9,7 +9,7 @@
         show-word-limit
         resize="none"
       ></el-input>
-      <el-button size="mini" style="float:right;marginTop:5px">
+      <el-button size="mini" style="float:right;marginTop:5px" @click="push(id)">
         评论
         <i class="el-icon-edit el-icon--right"></i>
       </el-button>
@@ -27,24 +27,41 @@
         </div>
         <div class="doing">
           <span  class="to">举报!</span>
-          <span><i class="el-icon-thumb"></i>{{ item.likedCount > 0 ?`(${ item.likedCount})`:'' }}</span>|
+          <span @click="like(item)"><i :class=" item.liked ? 'el-icon-thumb liked' : 'el-icon-thumb like'"></i>{{ item.likedCount > 0 ?`(${ item.likedCount})`:'' }}</span>|
           <span>分享</span>|
-          <span>回复</span>
+          <span @click="recommend(item,index)">回复</span>
         </div>
+				<!-- 回复 -->
+				<div class="repla" v-if="showrepla == index">
+				  <el-input
+				    type="textarea"
+				    placeholder="回复"
+				    v-model="retext"
+				    maxlength="140"
+				    show-word-limit
+				    resize="none"
+				  ></el-input>
+				  <el-button size="mini" style="float:right;marginTop:5px" @click="repush(item,id)">
+				    回复
+				    <i class="el-icon-edit el-icon--right"></i>
+				  </el-button>
+				</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import {  getSongListComment } from "network/home";
+import {  getSongListComment ,getcomment} from "network/home";
 import { formatDate } from "common/uctil";
 export default {
   data() {
     return {
       text: "",
+			retext:'',
       id:0,
       total:0,
+			showrepla:null
     };
   },
   props:{
@@ -54,6 +71,9 @@ export default {
               return []
           }
       },
+			id : {
+				type:Number
+			}
     //   hotComments:{
     //       type:Array,
     //       default(){
@@ -62,8 +82,56 @@ export default {
     //   },
   },
   methods:{
-      
+		like (item) {
+			if (item.liked) {
+				item.liked = !item.liked
+				item.likedCount--
+			}else {
+				item.liked = !item.liked
+				item.likedCount++
+			}
+			console.log(item)
+		},
+      push (comid) {
+				const params = {
+					t:1,
+					type:0,
+					id:comid,
+					content:this.text
+				}
+				return getcomment(params).then(res => {
+					if(res.code == 200) {
+						alert('发布成功')
+						this.text = ""
+					}
+				})
+			},
+			recommend(item,index) {
+				console.log(index)
+				this.showrepla = index
+			},
+			repush (comid,id) {
+				const params = {
+					t:1,
+					type:0,
+					id:id,
+					content:this.retext,
+					commentId:comid.commentId
+				}
+				// console.log(comid)
+				return getcomment(params).then(res => {
+					if(res.code == 200) {
+						alert('回复成功')
+						this.retext = ""
+					}
+				})
+			},
   },
+	watch:{
+		$route(to, from) {
+			this.showrepla = null
+		}
+	},
   created(){
       
   },
@@ -77,6 +145,9 @@ export default {
 </script>
 
 <style>
+	.liked {
+		color: #E91212;
+	}
 .comment{
     padding-bottom:20px ;
 }

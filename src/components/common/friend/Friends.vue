@@ -68,7 +68,7 @@ export default {
     margin-top: 40px;
   display: flex;
   width: 100%;
-  justify-content: start;
+  justify-content: flex-start;
   flex-wrap: wrap;
 }
 .friend-box {

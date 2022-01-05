@@ -45,7 +45,7 @@
               <i class="el-icon-star-on" v-show="false"></i>
             </span>
           </div>
-          <div class="icon">
+          <div class="icon" @click="opendownload">
             <span style="cursor: pointer;">
               <i class="el-icon-download"></i>
             </span>
@@ -166,6 +166,7 @@ export default {
   },
   data() {
     return {
+      downloadUrl:'',
       isplay: false, //播放状态
       musicDuration: 0, //音乐当前播放时间
       totalDuration: 100, //总时长 默认先给个100
@@ -184,6 +185,12 @@ export default {
     // },5000)
   },
   methods: {
+    opendownload() {
+      // debugger
+			if(this.$refs.audio.src) {
+				window.open(this.$refs.audio.src)
+			}
+    },
     //显示右下角歌单
     showRightList() {
       this.showRightDialog = true;
@@ -215,6 +222,8 @@ export default {
     getMusicUrl(id) {
       getMusicUrl(id).then((res) => {
         this.$store.commit(NOW_MUSIC, res.data[0].url);
+        debugger
+        this.downloadUrl = res.data[0].url
       });
     },
     getMusicMenu(id) {
@@ -253,7 +262,12 @@ export default {
         }
       });
       // if (this.isplay) return;
-      this.isplay = false;
+			if (!this.$refs.audio.paused) {
+				this.isplay = true;
+			}else {
+				this.isplay = false;
+			}
+      
       this.$store.commit(SET_PLAY, this.isplay);
     },
     playMusic() {
